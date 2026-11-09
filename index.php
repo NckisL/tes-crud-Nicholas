@@ -118,6 +118,9 @@ echo "
         .btn-hapus {
             background: #e74c3c;
         }
+        .btn-trx { 
+            background: #2980b9; 
+        }
         .bar {
             margin-bottom: 15px;
         }
@@ -140,6 +143,7 @@ echo "
         <a href=\"tambah.php\" class=\"btn btn-tambah\">+ New</a>
         <a href=\"#\" class=\"btn btn-edit\" onclick=\"EditItem(); return false;\">Edit</a>
         <a href=\"#\" class=\"btn btn-hapus\" onclick=\"DeleteItem(); return false;\">Delete</a>
+        <a href=\"transaksi.php\" class=\"btn btn-trx\">Transaksi</a>
 
         <div class=\"kanan\">
             <input type=\"text\" id=\"cari\" placeholder=\"Cari barang / kategori...\" onkeyup=\"FilterTabel();\">
