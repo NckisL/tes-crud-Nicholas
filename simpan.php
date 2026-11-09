@@ -15,11 +15,10 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
 
 $errors = array();
 
-// 1. Semua field wajib diisi
+// Add Validation for each field
 if ($item_name == '' || $item_cat == '' || $item_stok == '' || $item_harga == '') {
 	$errors[] = "Semua field wajib diisi!";
 } else {
-	// 2. Format angka & panjang
 	if (!ctype_digit($item_stok)) {
 		$errors[] = "Stok harus berupa angka bulat (tidak boleh minus/desimal).";
 	}
@@ -35,13 +34,11 @@ if ($item_name == '' || $item_cat == '' || $item_stok == '' || $item_harga == ''
 	$k  = mysql_real_escape_string($item_cat);
 	$id = mysql_real_escape_string($item_id);
 
-	// 3. Kategori harus ada
-	$cekKat = mysql_query("SELECT cat_id FROM category WHERE cat_id = '$k'");
-	if (mysql_num_rows($cekKat) == 0) {
+	$cekCat = mysql_query("SELECT cat_id FROM category WHERE cat_id = '$k'");
+	if (mysql_num_rows($cekCat) == 0) {
 		$errors[] = "Kategori tidak valid.";
 	}
 
-	// 4. Nama + kategori tidak boleh dobel (saat edit, abaikan barang itu sendiri)
 	$sqlDobel = "SELECT item_id FROM item WHERE item_name = '$n' AND item_cat_id = '$k'";
 	if ($newRcd == "No") {
 		$sqlDobel .= " AND item_id <> '$id'";

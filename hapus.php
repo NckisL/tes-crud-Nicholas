@@ -8,7 +8,7 @@ if ($id == '') {
     exit;
 }
 
-// barang yang sudah punya transaksi tidak boleh dihapus (dijaga foreign key)
+// barang yang sudah ada transaksi tidak boleh dihapus
 $cek = mysql_query("SELECT COUNT(*) AS jml FROM transactions WHERE trx_item_id = '$id'");
 $r   = mysql_fetch_array($cek);
 

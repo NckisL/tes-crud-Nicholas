@@ -1,7 +1,6 @@
 <?php
 require_once("koneksi.php");
 
-// dropdown kategori dari database
 $cat_list = mysql_query("SELECT cat_id, cat_name FROM category ORDER BY cat_name");
 $opt = "<option value=\"\">-- Pilih Kategori --</option>";
 while ($k = mysql_fetch_array($cat_list)) {

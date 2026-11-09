@@ -1,8 +1,6 @@
 <?php
 include("koneksi.php");
 
-$where = "";
-$cari ="";
 $sql = "SELECT
             i.item_id,
             i.item_name,
@@ -11,7 +9,6 @@ $sql = "SELECT
             i.item_price
         FROM item i
         JOIN category c ON i.item_cat_id = c.cat_id
-        /*$where*/
         ORDER BY i.item_id DESC
         ";
 
@@ -30,10 +27,12 @@ $DATATABLE = "
             <th>Harga</th>
         </tr>
     </thead>
-    <tbody>";
+    <tbody>
+        <tr id=\"baris_kosong\" style=\"display:none;\"><td colspan=\"6\" align=\"center\">Data tidak ditemukan</td></tr>
+    ";
 
 if ($row == 0) {
-    $DATATABLE .= "<tr><td colspan=\"6\" align=\"center\">Data tidak ditemukan</td></tr>";
+    $DATATABLE .= "<tr><td colspan=\"6\" align=\"center\">Belum ada data</td></tr>";
 }
 
 for ($r = 0; $r < $row; $r++) {
@@ -60,8 +59,6 @@ for ($r = 0; $r < $row; $r++) {
 $DATATABLE .= "
     </tbody>
 </table>";
-
-$cariVal = htmlspecialchars($cari);
 
 echo "
 <!DOCTYPE html>
@@ -144,10 +141,9 @@ echo "
         <a href=\"#\" class=\"btn btn-edit\" onclick=\"EditItem(); return false;\">Edit</a>
         <a href=\"#\" class=\"btn btn-hapus\" onclick=\"DeleteItem(); return false;\">Delete</a>
 
-        <form method=\"get\" class=\"kanan\">
-            <input type=\"text\" name=\"cari\" placeholder=\"Cari barang / kategori\" value=\"$cariVal\">
-            <button type=\"submit\">Cari</button>
-        </form>
+        <div class=\"kanan\">
+            <input type=\"text\" id=\"cari\" placeholder=\"Cari barang / kategori...\" onkeyup=\"FilterTabel();\">
+        </div>
     </div>
 
     $DATATABLE
@@ -155,7 +151,6 @@ echo "
         var selectedId   = '';
         var selectedName = '';
 
-        // klik baris -> tandai sebagai terpilih
         var rows = document.querySelectorAll('#table_list tbody tr.baris');
         for (var i = 0; i < rows.length; i++) {
             rows[i].onclick = function () {
@@ -184,6 +179,35 @@ echo "
             if (confirm('Yakin hapus ' + selectedName + '?')) {
                 window.location = 'hapus.php?id=' + encodeURIComponent(selectedId);
             }
+        }
+        
+        // Filter tabel dari input pencarian
+        function FilterTabel() {
+            var kata   = document.getElementById('cari').value.toLowerCase();
+            var baris  = document.querySelectorAll('#table_list tbody tr.baris');
+            var tampil = 0;
+
+            for (var i = 0; i < baris.length; i++) {
+                var teks = baris[i].innerText.toLowerCase();
+                if (teks.indexOf(kata) > -1) {
+                    baris[i].style.display = '';
+                    tampil++;
+                } else {
+                    baris[i].style.display = 'none';
+                    baris[i].classList.remove('row_selected');
+                }
+            }
+
+            if (selectedId != '') {
+                var masihAda = false;
+                for (var j = 0; j < baris.length; j++) {
+                    if (baris[j].classList.contains('row_selected')) masihAda = true;
+                }
+                if (!masihAda) { selectedId = ''; selectedName = ''; }
+            }
+
+            var kosong = document.getElementById('baris_kosong');
+            if (kosong) kosong.style.display = (tampil == 0 && baris.length > 0) ? '' : 'none';
         }
     </script>
 </body>
